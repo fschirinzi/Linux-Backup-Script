@@ -1,8 +1,11 @@
 #!/bin/bash
 
-FILES="./config/*"
+SCRIPTPATH=`pwd -P`
+
+FILES="$SCRIPTPATH/config/*"
 for f in $FILES
 do
+    cd $SCRIPTPATH
     source "$f"
 
     if [ -n "$SERVICE" ] || [ -n "$SERVERIP" ] || [ -n "$USER" ] || [ -n "$PORT" ] || [ -n "$DBUSER" ] || [ -n "$DBPASSWD" ] || [ -n "$DBHOST" ] || [ -n "$FOLDERS" ] || [ -n "$DBs" ];
@@ -28,14 +31,14 @@ do
       	#Backupdirectory to use (2013/48/1 for 02.11.2013)
       	# 48 - Weeknumber
       	#  1 - Daynumber
-      	LocalBackupDir="/backup/it-web/$SERVICE/$YEAR/$WNUM/$DNUM"
+      	LocalBackupDir="/backup"$ADDDIR"/$SERVICE/$YEAR/$WNUM/$DNUM"
       	RemoteBackupDir="/tmp/$SERVICE"
       	BackupFilePath="$RBKDIR/$BKFILE"
-      	LOGDIR="/backup/it-web/$SERVICE"
+      	LOGDIR="/backup"$ADDDIR"/$SERVICE"
       	LOGFILE="$LOGDIR/$LOGFILENAME"
       
       
-              echo ""
+        echo ""
       	echo ""
       	echo "STEP $num"
       	echo "Create folder if they not exist"
@@ -175,9 +178,9 @@ EOF
             rm $putfile2
             rm "$LocalBackupDir/$SERVICE-md5l.txt"
 
-            echo "$TODAY          Backup von $SERVICE war erfolgreich" >> "$LOGFILE"
-
         else
+
+            echo $subject >> "$LOGFILE"
 
             for (( i = 0 ; i < ${#emails[@]} ; i++ )) do
                 email="${emails[$i]}"
