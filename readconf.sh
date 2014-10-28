@@ -1,4 +1,5 @@
 #!/bin/bash
+# https://github.com/fschirinzi/Linux-Backup-Script
 
 SCRIPTPATH=`pwd -P`
 
