@@ -2,6 +2,7 @@
 # https://github.com/fschirinzi/Linux-Backup-Script
 
 SCRIPTPATH=`pwd -P`
+ROOTBKDIR="/backup"
 
 FILES="${SCRIPTPATH}/config/*"
 for f in ${FILES}
@@ -33,10 +34,10 @@ do
       	#Backupdirectory to use (2013/48/1 for 02.11.2013)
       	# 48 - Weeknumber
       	#  1 - Daynumber
-      	LocalBackupDir="/backup${ADDDIR}/${SERVICE}/${YEAR}/${WNUM}/${DNUM}"
+      	LocalBackupDir="${ROOTBKDIR}${ADDDIR}/${SERVICE}/${YEAR}/${WNUM}/${DNUM}"
       	RemoteBackupDir="/tmp/${SERVICE}"
       	BackupFilePath="$RBKDIR/${BKFILE}"
-      	LOGDIR="/backup${ADDDIR}/${SERVICE}"
+      	LOGDIR="${ROOTBKDIR}${ADDDIR}/${SERVICE}"
       	LOGFILE="${LOGDIR}/${LOGFILENAME}"
       
       
