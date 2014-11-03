@@ -12,44 +12,44 @@ do
 
     if [ -n "${SERVICE}" ] || [ -n "${SERVERIP}" ] || [ -n "${USER}" ] || [ -n "${PORT}" ] || [ -n "${DBUSER}" ] || [ -n "${DBPASSWD}" ] || [ -n "${DBHOST}" ];
     then
-        
+
         echo "Processing ${f} file..."
 
         #display var
         num=1
-        
+
         #Important Informations
-      	TODAY=$(date +"%d%m%y")
-      	DNUM=$(date +"%u")
-      	WNUM=$(date +"%V")
-      	YEAR=$(date +"%G")
-      
-      	#Fileinfo
-      	#CSr = MD5 CHECKSUMM - "r" is for REMOTE; "l" is for local
-      	BKFILE="${SERVICE}-${TODAY}.tar.gz"
-      	CSr="${SERVICE}-md5r.txt"
+        TODAY=$(date +"%d%m%y")
+        DNUM=$(date +"%u")
+        WNUM=$(date +"%V")
+        YEAR=$(date +"%G")
+
+        #Fileinfo
+        #CSr = MD5 CHECKSUMM - "r" is for REMOTE; "l" is for local
+        BKFILE="${SERVICE}-${TODAY}.tar.gz"
+        CSr="${SERVICE}-md5r.txt"
         CSl="${SERVICE}-md5l.txt"
-      	LOGFILENAME="${SERVICE}.log"
-      
-      	#Backupdirectory to use (2013/48/1 for 02.11.2013)
-      	# 48 - Weeknumber
-      	#  1 - Daynumber
-      	LocalBackupDir="${ROOTBKDIR}${ADDDIR}/${SERVICE}/${YEAR}/${WNUM}/${DNUM}"
-      	RemoteBackupDir="/tmp/${SERVICE}"
-      	BackupFilePath="$RBKDIR/${BKFILE}"
-      	LOGDIR="${ROOTBKDIR}${ADDDIR}/${SERVICE}"
-      	LOGFILE="${LOGDIR}/${LOGFILENAME}"
-      
-      
+        LOGFILENAME="${SERVICE}.log"
+
+        #Backupdirectory to use (2013/48/1 for 02.11.2013)
+        # 48 - Weeknumber
+        #  1 - Daynumber
+        LocalBackupDir="${ROOTBKDIR}${ADDDIR}/${SERVICE}/${YEAR}/${WNUM}/${DNUM}"
+        RemoteBackupDir="/tmp/${SERVICE}"
+        BackupFilePath="$RBKDIR/${BKFILE}"
+        LOGDIR="${ROOTBKDIR}${ADDDIR}/${SERVICE}"
+        LOGFILE="${LOGDIR}/${LOGFILENAME}"
+
+
         echo ""
-      	echo ""
-      	echo "STEP ${num}"
-      	echo "Create folder if they not exist"
-      	echo ""
-      
+        echo ""
+        echo "STEP ${num}"
+        echo "Create folder if they not exist"
+        echo ""
+
         if [ ! -d "${LocalBackupDir}" ]; then
             mkdir -p ${LocalBackupDir}
-      	fi
+        fi
 
 ssh -p ${PORT} ${USER}@${SERVERIP} <<EOF
 if [ ! -d "${RemoteBackupDir}" ]; then
@@ -61,7 +61,7 @@ EOF
         num=$((num + 1))
 
         if [ "${BBKFOLDERS}" == "TRUE" ]; then
-        
+
             echo ""
             echo ""
             echo "STEP ${num}"
@@ -84,7 +84,7 @@ EOF
         fi
 
         if [ "${BBKFILES}" == "TRUE" ]; then
-            
+
             echo ""
             echo ""
             echo "STEP ${num}"
@@ -102,11 +102,11 @@ EOF
             done
 
             num=$((num + 1))
-            
+
         fi
 
         if [ "${BBKDBS}" == "TRUE" ]; then
-            
+
             echo ""
             echo ""
             echo "STEP ${num}"
@@ -136,13 +136,13 @@ EOF
         echo ""
 
         #TAR all Files togehter
-	md5r="/tmp/${CSr}"
+        md5r="/tmp/${CSr}"
 ssh -p ${PORT} ${USER}@${SERVERIP} <<EOF
 tar -cvzf "/tmp/${BKFILE}" ${RemoteBackupDir}
 md5sum < "/tmp/${BKFILE}" > ${md5r}
 exit
 EOF
-        
+
         num=$((num + 1))
 
 
@@ -153,23 +153,23 @@ EOF
         echo ""
 
         #Files to get
-	getfile1="/tmp/${BKFILE}"
-	getfile2="/tmp/${CSr}"
+        getfile1="/tmp/${BKFILE}"
+        getfile2="/tmp/${CSr}"
 
-	putfile1="${LocalBackupDir}/${BKFILE}"
-	putfile2="${LocalBackupDir}/${CSr}"
+        putfile1="${LocalBackupDir}/${BKFILE}"
+        putfile2="${LocalBackupDir}/${CSr}"
 
-	scp -P ${PORT} ${USER}@${SERVERIP}:${getfile1} ${putfile1}
-	scp -P ${PORT} ${USER}@${SERVERIP}:${getfile2} ${putfile2}
+        scp -P ${PORT} ${USER}@${SERVERIP}:${getfile1} ${putfile1}
+        scp -P ${PORT} ${USER}@${SERVERIP}:${getfile2} ${putfile2}
 
         num=$((num + 1))
 
-	cd ${LocalBackupDir}
+        cd ${LocalBackupDir}
 
-	md5sum < ${putfile1} > "${CSl}"
+        md5sum < ${putfile1} > "${CSl}"
 
-	if diff "${CSl}" "${CSr}" > /dev/null 2>&1
-	then
+        if diff "${CSl}" "${CSr}" > /dev/null 2>&1
+        then
 
 ssh -p ${PORT} ${USER}@${SERVERIP} <<EOF
 rm -Rf "${RemoteBackupDir}/"
@@ -187,9 +187,9 @@ EOF
 
             for (( i = 0 ; i < ${#emails[@]} ; i++ )) do
                 email="${emails[$i]}"
-                sudo /script/sendinfos.sh "${subject}" "${email}"
+                sudo /backup/script/sendinfos.sh "${subject}" "${email}"
                 echo ${email}
             done
-	fi
+        fi
     fi
 done
