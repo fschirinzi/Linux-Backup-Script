@@ -1,7 +1,7 @@
 #!/bin/bash
 # https://github.com/fschirinzi/Linux-Backup-Script
 
-SCRIPTPATH=`pwd -P`
+SCRIPTPATH=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 ROOTBKDIR="/backup"
 
 FILES="${SCRIPTPATH}/config/*"
