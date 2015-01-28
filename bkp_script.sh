@@ -182,12 +182,11 @@ EOF
             rm "${LocalBackupDir}/${CSl}"
 
         else
-
             echo ${subject} >> "${LOGFILE}"
 
             for (( i = 0 ; i < ${#emails[@]} ; i++ )) do
                 email="${emails[$i]}"
-                sudo /backup/script/sendinfos.sh "${subject}" "${email}"
+                sudo "${SCRIPTPATH}/sendinfos.sh" "${subject}" "${email}"
                 echo ${email}
             done
         fi
