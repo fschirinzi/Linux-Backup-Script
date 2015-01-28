@@ -24,7 +24,8 @@ This script is for backupping folders, files and MySQL databases.
 Path | permissions
 --- | ---
 ./scripts | rwx
-./scripts/readconf.sh | rwx
+./scripts/bkp_script.sh | rwx
+./scripts/del_script.sh | rwx
 ./scripts/config/ | rw
 ./scripts/config/srv1.conf | rw
 ./scripts/config/srv2.conf | rw
